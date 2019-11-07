@@ -1,0 +1,292 @@
+@model dynamic
+@using NutriTrust
+@using NutriTrust.Models
+
+@{
+    menu_items menu_item = Model.menuItem;
+    List<menu_items> menu_Items = Model.menu_Items;
+    item_nutrition item_Nutrition = Model.itemNutrition;
+    List<category> categoryOptions = Model.categoryOptions;
+    List<custom_filters> customFilterOptions = Model.customFilterOptions;
+    List<default_filters> defaultFilters = Model.defaultFilters;
+    List<default_filters> glutenFilterOptions = Model.glutenFilterOptions;
+    List<default_filters> allergenFilterOptions = Model.allergenFilterOptions;
+    item_avail item_Avails = Model.item_Avails;
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Edit</h2>
+        <ol class="breadcrumb">
+            <li>
+                @Html.ActionLink("List", "Index")
+            </li>
+            <li class="active">
+                <strong>Edit</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-8">
+        <div class="title-action">
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Edit menu_items</h5>
+                </div>
+                <div class="ibox-content">
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="col-sm-6 editMenuItem editMenuItemLeft">
+                            <p>@Html.Label("Name")                 @Html.EditorFor(Model => menu_item.name, new { htmlAttributes = new { Name = "name", @class = "menu_item" } })</p>
+                            @Html.CheckBox("as_ingredient", false, new { @class = "form-control" })@Html.Label("As Ingredient")
+                            <br />
+                            @Html.Label("Child Alias")             @Html.EditorFor(Model => menu_item.child_alias, new { htmlAttributes = new { Name = "child_alias", @class = "menu_item" } })
+                            @Html.Label("Ingredient Alias")        @Html.EditorFor(Model => menu_item.ingred_alias, new { htmlAttributes = new { Name = "ingred_alias", @class = "menu_item" } })
+                            @Html.Label("Version Alias")           @Html.EditorFor(Model => menu_item.version_alias, new { htmlAttributes = new { Name = "version_alias", @class = "menu_item" } })
+                            @Html.Label("Nutrition Chart Alias")   @Html.EditorFor(Model => menu_item.nutrition_alias, new { htmlAttributes = new { Name = "nutrition_alias", @class = "menu_item" } })
+                            <br />
+                            @Html.CheckBox("hide_on_NC", false, new { @class = "form-control" }) @Html.Label("Hide on Nutrition Chart")
+                            <br />
+                            @Html.CheckBox("hide_on_MP", false, new { @class = "form-control" }) @Html.Label("Hide on Menu Page")
+                            <br />
+                            @Html.CheckBox("mb", false, new { @class = "form-control" }) @Html.Label("Menu Builder")
+                            <br />
+                            @Html.CheckBox("quanto", false, new { @class = "form-control" }) @Html.Label("Use Quantities")
+
+                            @Html.Label("Quantities Multiplier")   @Html.EditorFor(Model => menu_item.quanto_multiplier, new { htmlAttributes = new { Name = "quanto_multiplier", @class = "menu_item form-control" } })
+                            @Html.Label("Custom ID")               @Html.EditorFor(Model => menu_item.cmiid, new { htmlAttributes = new { Name = "cmiid", @class = "menu_item" } })
+                            @Html.CheckBox("use_cmiid", false, new { @class = "form-control" }) @Html.Label("As Shell")
+                            <br>
+                            @Html.Label("Description")             @Html.TextAreaFor(Model => menu_item.description, new { Name = "description", @class = "menu_item" })
+                            @Html.Label("Short Description")       @Html.TextAreaFor(Model => menu_item.s_descriptions, new { Name = "s_descriptions", @class = "menu_item" })
+                            @Html.Label("Meta-Data")               @Html.EditorFor(Model => menu_item.meta, new { htmlAttributes = new { Name = "meta", @class = "menu_item" } })
+                            @Html.Label("Notes")                   @Html.TextAreaFor(Model => menu_item.notes, new { Name = "notes", @class = "menu_item" })
+                            @Html.Label("Ingredient Declaration")  @Html.TextAreaFor(Model => menu_item.ingredient_dec, new { Name = "ingredient_dec", @class = "menu_item" })
+                            @Html.Label("Special Request")         @Html.TextAreaFor(Model => menu_item.special_req, new { Name = "special_req", @class = "menu_item" })
+                            @Html.Partial("_Images", null, new ViewDataDictionary { { "FieldName", "menu_item_image" } })
+                            @Html.Label("Default Price")           @Html.EditorFor(Model => menu_item.price, new { htmlAttributes = new { Name = "price", @class = "menu_item" } })
+
+                            @Html.Label("Categories")
+                            @Html.DropDownListFor(Model => categoryOptions, new MultiSelectList(categoryOptions, "id", "name"), new { Name = "categories", multiple = "multiple", @class = "form-control categories chosen-select" })
+                            @Html.Label("Available Options Nomenclature") @Html.EditorFor(Model => menu_item.avail_opt, new { htmlAttributes = new { Name = "avail_opt", @class = "menu_item" } })
+                        </div>
+
+                        <style>
+                            .itemNutritionStyling {
+                                width: 100px;
+                                float: right;
+                            }
+                        </style>
+
+                        <div class="col-sm-6 editMenuItem editMenuItemRight">
+                            <p>@Html.Label("Quantity")          @Html.EditorFor(Model => item_Nutrition.q, new { htmlAttributes = new { Name = "q", @class = "itemNutritionStyling", placeholder="Quantity"} })</p>
+                            <hr />
+                            <p>@Html.Label("Unit of Measurement") @Html.EditorFor(Model => item_Nutrition.aum, new { htmlAttributes = new { Name = "aum", @class = "itemNutritionStyling", placeholder="Serving" } })</p>
+                            <hr />
+                            <p>
+                                @Html.Label("Calories") @Html.EditorFor(Model => item_Nutrition.calories, new { htmlAttributes = new { Name = "calories", @class = "itemNutritionStyling", placeholder="Cal" } })
+                            </p>
+                            <hr /> <p>
+                                @Html.Label("Calories from fat")                                @Html.EditorFor(Model => item_Nutrition.calories_from_fat, new { htmlAttributes = new { Name = "calories", @class = "itemNutritionStyling", placeholder="Cal from Fat" } })
+                            </p>
+                            <hr /><p>
+                                @Html.Label("Fat")                                @Html.EditorFor(Model => item_Nutrition.fat, new { htmlAttributes = new { Name = "calories", @class = "itemNutritionStyling", placeholder="Fat" } })
+
+                            </p>
+                            <hr /><p>
+                                @Html.Label("Saturated Fat")                                @Html.EditorFor(Model => item_Nutrition.sat_fat, new { htmlAttributes = new { Name = "sat_fat", @class = "itemNutritionStyling", placeholder="Sat Fat" } })
+
+                            </p>
+                            <hr /><p>
+                                @Html.Label("Trans Fat")                                @Html.EditorFor(Model => item_Nutrition.trans_fat, new { htmlAttributes = new { Name = "trans_fat", @class = "itemNutritionStyling", placeholder="Trans Fat" } })
+
+                            </p>
+                            <hr /><p>
+                                @Html.Label("Cholesterol")                                @Html.EditorFor(Model => item_Nutrition.cholest, new { htmlAttributes = new { Name = "cholest", @class = "itemNutritionStyling", placeholder="Cholesterol" } })
+
+                            </p>
+                            <hr /><p>
+                                @Html.Label("Sodium")                                @Html.EditorFor(Model => item_Nutrition.sodium, new { htmlAttributes = new { Name = "sodium", @class = "itemNutritionStyling", placeholder="Sodium" } })
+
+                            </p>
+                            <hr /><p>
+                                @Html.Label("Carbs")                                @Html.EditorFor(Model => item_Nutrition.carbs, new { htmlAttributes = new { Name = "carbs", @class = "itemNutritionStyling", placeholder= "Carbs" } })
+
+                            </p>
+                            <hr /><p>
+                                @Html.Label("Fiber")                                @Html.EditorFor(Model => item_Nutrition.fiber, new { htmlAttributes = new { Name = "fiber", @class = "itemNutritionStyling", placeholder="Fiber" } })
+
+                            </p>
+                            <hr /><p>
+                                @Html.Label("Sugar")                                @Html.EditorFor(Model => item_Nutrition.sugar, new { htmlAttributes = new { Name = "sugar", @class = "itemNutritionStyling", placeholder="Sugar" } })
+
+                            </p>
+                            <hr /><p>
+                                @Html.Label("Protien")                                @Html.EditorFor(Model => item_Nutrition.protein, new { htmlAttributes = new { Name = "protein", @class = "itemNutritionStyling", placeholder = "Protein" } })
+
+                            </p>
+                            <hr /><p>
+                                @Html.Label("Fruits & Veggies")                                @Html.EditorFor(Model => item_Nutrition.fruit_veg, new { htmlAttributes = new { Name = "fruit_veg", @class = "itemNutritionStyling", placeholder = "Fruit/Veg" } })
+
+                            </p>
+                            <hr />
+                    
+                    @Html.Label("Filters") @Html.DropDownListFor(Model => defaultFilters, new MultiSelectList(defaultFilters, "id", "filter_name"), new { Name = "defaultFilters", multiple = "multiple", @class = "form-control defaultFilters chosen-select" })
+                    
+                    @Html.Label("Custom Filters") @Html.DropDownListFor(Model => customFilterOptions, new MultiSelectList(customFilterOptions, "id", "name"), new { Name = "customFilters", multiple = "multiple", @class = "form-control customFilters chosen-select" })
+                            
+                    @Html.Label("Gluten") @Html.DropDownListFor(Model => glutenFilterOptions, new MultiSelectList(glutenFilterOptions, "id", "filter_name"), new { Name = "glutenFilters", multiple = "multiple", @class = "form-control glutenFilters chosen-select" })
+                    
+                    @Html.Label("Allergens") @Html.DropDownListFor(Model => allergenFilterOptions, new MultiSelectList(allergenFilterOptions, "id", "filter_name"), new { Name = "allergenFilters", multiple = "multiple", @class = "form-control allergenFilters chosen-select" })
+
+                            @*Fish*@
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    @Html.Label("Fish") @Html.CheckBox("WoutFish", false, new { @class = "form-control" })
+
+                                </div>
+                                <div class="col-sm-3">
+                                    @Html.Label("Cross Contact") @Html.CheckBox("fishCC", false, new { @class = "form-control" })
+
+                                </div>
+                                <div class="col-sm-6"> @Html.Label("Type of Fish")  @Html.Editor("fishType", new { @class = "form-control" }) </div>
+                            </div>
+
+                            @*Shellfish*@
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    @Html.Label("Shellfish") @Html.CheckBox("WoutShellfish", false, new { @class = "form-control" })
+
+                                </div>
+                                <div class="col-sm-3">
+                                    @Html.Label("Cross Contact")@Html.CheckBox("shellfishCC", false, new { @class = "form-control" })
+
+                                </div>
+                                <div class="col-sm-6">@Html.Label("Type of Shellfish") @Html.Editor("shellfishType", new { @class = "form-control" }) </div>
+                            </div>
+
+                            @*Mollusk*@
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    @Html.Label("Mollusks") @Html.CheckBox("WoutMollusks", false, new { @class = "form-control" })
+                                </div>
+                                    <div class="col-sm-3">
+                                        @Html.Label("Cross Contact") @Html.CheckBox("mollusksCC", false, new { @class = "form-control" })
+                                    </div>
+                                   
+                                <div class="col-sm-6"> 
+                                    @Html.Label("Type of Mollusks") @Html.Editor("mollusksType", new { @class = "form-control" }) 
+                                </div>
+                            </div>
+
+                                @*Tree Nuts*@
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        @Html.Label("Tree Nuts")
+                                        @Html.CheckBox("WoutTreenuts", false, new { @class = "form-control" })
+
+                                    </div>
+                                    <div class="col-sm-3">
+                                        @Html.Label("Cross Contact") @Html.CheckBox("treeNutsCC", false, new { @class = "form-control" })}
+                                    </div>
+                                    <div class="col-sm-6"> @Html.Label("Type of Tree nuts") @Html.Editor("treeNutType", new { @class = "form-control" }) </div>
+                                </div>
+
+                                @Html.Label("Alternate Versions Group Name")
+                                <br />
+                                @Html.EditorFor(Model => menu_item.altv_group_name)
+                                <br />
+                                @Html.Label("Alternate Versions")  @Html.DropDownListFor(Model => menu_Items, new MultiSelectList(menu_Items, "id", "name", null), new { Name = "menu_Items", multiple = "multiple", @class = "form-control menuItems chosen-select" })
+                                <br />
+                                @Html.Label("Child Group Name") @Html.EditorFor(Model => menu_item.child_group_name, new { Name = "child_group_name" })
+                                @Html.Label("Child Items")@Html.DropDownListFor(Model => menu_Items, new MultiSelectList(menu_Items, "id", "name", null), new { Name = "child_Items", multiple = "multiple", @class = "form-control menuItems chosen-select" })
+
+                                <br /><br /><br />
+                            </div>
+
+                            @* Special availability settings *@
+                            <div style="background-color:aliceblue" class="col-sm-12">Special Availability Settings<br />(e.g., Only available on Mondays between 10am and 2pm)<button class="btn btn-primary" style="float:right" type="button" data-toggle="collapse" data-target="#specialavail"><i class="fa fa-arrow-down"></i></button></div>
+                            <div class="col-sm-12 collapse" id="specialavail">
+                                <table class="table table-striped dataTables">
+                                    <thead>
+                                        <tr>
+                                            <th>Available</th>
+                                            <th>Day</th>
+                                            <th>From</th>
+                                            <th>End</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr>
+                                            <td>@Html.CheckBox("m", false)</td>
+                                            <td>Monday</td>
+                                            <td>@Html.TextBox("ms", item_Avails.ms, new { Type = "time", @class = "form-control" })</td>
+                                            <td>@Html.TextBox("me", item_Avails.me, new { Type = "time", @class = "form-control" })</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>@Html.CheckBox("t", false)</td>
+                                            <td>Tuesday</td>
+                                            <td>@Html.TextBox("ts", item_Avails.ts, new { Type = "time", @class = "form-control" })</td>
+                                            <td>@Html.TextBox("te", item_Avails.te, new { Type = "time", @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("w", false)</td>
+                                            <td>Wednesday</td>
+                                            <td>@Html.TextBox("ws", item_Avails.ws, new { Type = "time", @class = "form-control" })</td>
+                                            <td>@Html.TextBox("we", item_Avails.we, new { Type = "time", @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("th", false)</td>
+                                            <td>Thursday</td>
+                                            <td>@Html.TextBox("ths", item_Avails.ths, new { Type = "time", @class = "form-control" })</td>
+                                            <td>@Html.TextBox("the", item_Avails.the, new { Type = "time", @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("f", false)</td>
+                                            <td>Friday</td>
+                                            <td>@Html.TextBox("fs", item_Avails.fs, new { Type = "time", @class = "form-control" })</td>
+                                            <td>@Html.TextBox("fe", item_Avails.fe, new { Type = "time", @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("s", false)</td>
+                                            <td>Saturday</td>
+                                            <td>@Html.TextBox("ss", item_Avails.ss, new { Type = "time", @class = "form-control" })</td>
+                                            <td>@Html.TextBox("se", item_Avails.se, new { Type = "time", @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("su", false)</td>
+                                            <td>Sunday</td>
+                                            <td>@Html.TextBox("sus", item_Avails.sus, new { Type = "time", @class = "form-control" })</td>
+                                            <td>@Html.TextBox("sue", item_Avails.sue, new { Type = "time", @class = "form-control" })</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10" style="margin-bottom:2em; margin-top:1em">
+                                    <input type="submit" value="Save" class="btn btn-primary"/>
+                                    @Html.ActionLink("Cancel", "Index", new { id = ViewBag.url }, new { @class = "btn btn-white" })
+                                </div>
+                            </div>
+                    }
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
