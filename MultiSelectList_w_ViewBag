@@ -1,0 +1,21 @@
+//***Controller  (ex is for categories)
+
+//***whole list to populate the multiselect list
+List<category> categoryList = db.categories.Where(x => x.client_id == iClientID).ToList();
+
+//***array of corresponding values(id's) to general list for which options are selected
+List<int?> categoryIDs = (List<int?>)db.J_menu_items_categories.Where(x => x.menu_item_id == id).Where(x => x.deleted == 0).Select(x => x.categories_id).ToList();
+int[] categories = db.categories.Where(x => categoryIDs.Contains(x.id)).Where(x => x.client_id == iClientID).Select(x=>x.id).ToArray();
+
+//***Viewbag to be used on viewpage
+ViewBag.categoriesBag = new MultiSelectList(categoryList, "id", "name", categories);
+
+//***End Controller
+
+
+
+
+
+//ViewPage
+
+@Html.DropDownList("categoryDropdown", (MultiSelectList)ViewBag.categoriesBag, new { Name = "categoryDropdown", multiple = "multiple", @class = "form-control categories chosen-select" })
